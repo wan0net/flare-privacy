@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Flare Journal — A privacy-first iOS app for tracking autoimmune disease activity across 14 conditions with 17 validated clinical scores. All data stays on your device.">
+  <meta name="theme-color" content="#0a0a1a">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Flare Journal">
+  <meta property="og:description" content="Track your disease activity. Understand your flares. A privacy-first iOS app for Crohn's disease, ankylosing spondylitis, and other chronic inflammatory conditions.">
+  <meta property="og:image" content="icon.png">
+  <meta property="og:type" content="website">
+
+  <title>Flare Journal — Track Your Disease Activity</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:            #0a0a1a;
+      --bg-card:       #12122a;
+      --border:        #1e1e3a;
+      --text:          #e8e8f0;
+      --text-secondary:#8888a8;
+      --accent:        #f4c542;
+      --accent-dim:    #e8a020;
+      --green:         #4ade80;
+      --radius-card:   16px;
+      --radius-badge:  999px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Keyframes ── */
+    @keyframes iconGlow {
+      0%, 100% { box-shadow: 0 0 30px 6px rgba(244, 197, 66, 0.25), 0 0 60px 12px rgba(244, 197, 66, 0.10); }
+      50%       { box-shadow: 0 0 40px 10px rgba(244, 197, 66, 0.38), 0 0 80px 20px rgba(244, 197, 66, 0.15); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+
+    /* ── Layout helpers ── */
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 96px 0;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 26, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      object-fit: cover;
+    }
+
+    .nav-title {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* ── Hero ── */
+    #hero {
+      padding: 160px 0 96px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Radial glow behind hero */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(244, 197, 66, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-icon-wrap {
+      display: inline-block;
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .hero-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 26px;
+      object-fit: cover;
+      display: block;
+      animation: iconGlow 3.5s ease-in-out infinite;
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 7vw, 68px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 16px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-title .accent {
+      color: var(--accent);
+    }
+
+    .hero-tagline {
+      font-size: clamp(18px, 2.5vw, 22px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 24px;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .hero-cta {
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .badge-coming-soon {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: 1.5px solid rgba(244, 197, 66, 0.35);
+      border-radius: var(--radius-badge);
+      background: rgba(244, 197, 66, 0.06);
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: default;
+      user-select: none;
+    }
+
+    .badge-coming-soon .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .badge-coming-soon .apple-icon {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    /* ── Section headers ── */
+    .section-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-body {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── Features ── */
+    #features {
+      border-top: 1px solid var(--border);
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .features-header .section-body {
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(244, 197, 66, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 20px;
+      display: block;
+      line-height: 1;
+    }
+
+    .feature-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── How It Works ── */
+    #how-it-works {
+      border-top: 1px solid var(--border);
+    }
+
+    .how-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .how-header .section-body {
+      margin: 0 auto;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 0;
+    }
+
+    .step {
+      text-align: center;
+      padding: 0 16px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(244, 197, 66, 0.1);
+      border: 1.5px solid rgba(244, 197, 66, 0.4);
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .step-text {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+    }
+
+    .step-arrow {
+      color: var(--border);
+      font-size: 24px;
+      flex-shrink: 0;
+      margin-top: -18px; /* align with text area, not number */
+    }
+
+    /* ── Conditions ── */
+    #conditions {
+      border-top: 1px solid var(--border);
+    }
+
+    .conditions-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .conditions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .condition-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .condition-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .condition-dot.soon {
+      background: var(--text-secondary);
+    }
+
+    .condition-name {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .condition-scores {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .condition-soon-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 7px;
+      margin-top: 4px;
+    }
+
+    .privacy-callout {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .privacy-callout::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0.6;
+    }
+
+    .privacy-callout-icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .privacy-callout-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .privacy-callout-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .privacy-callout-body strong {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 40px;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .footer-brand-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .footer-brand-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    .footer-meta a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-meta a:hover {
+      color: var(--text);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      section {
+        padding: 72px 0;
+      }
+
+      #hero {
+        padding: 120px 0 72px;
+      }
+
+      .hero-icon {
+        width: 96px;
+        height: 96px;
+        border-radius: 20px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .step-arrow {
+        display: none;
+      }
+
+      .step {
+        display: flex;
+        align-items: flex-start;
+        text-align: left;
+        gap: 16px;
+        padding: 0;
+      }
+
+      .step-number {
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+
+      .step-text {
+        padding-top: 10px;
+      }
+
+      .conditions-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .footer-meta {
+        text-align: left;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 18px;
+      }
+
+      .hero-title {
+        letter-spacing: -0.025em;
+      }
+
+      .badge-coming-soon {
+        padding: 12px 22px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="icon.png" alt="Flare Journal icon" class="nav-icon">
+        <span class="nav-title">Flare Journal</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#conditions">Conditions</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-icon-wrap">
+        <img src="icon.png" alt="Flare Journal" class="hero-icon">
+      </div>
+
+      <h1 class="hero-title">
+        Flare<span class="accent"> Journal</span>
+      </h1>
+
+      <p class="hero-tagline">
+        Track your disease activity.<br>Understand your flares.
+      </p>
+
+      <p class="hero-subtitle">
+        A privacy-first iOS app for people living with Crohn's disease,
+        ankylosing spondylitis, and other chronic inflammatory conditions.
+      </p>
+
+      <div class="hero-cta">
+        <div class="badge-coming-soon">
+          <span class="apple-icon">&#63743;</span>
+          <span class="dot"></span>
+          Coming Soon to the App Store
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="container">
+      <div class="features-header">
+        <p class="section-label">Features</p>
+        <h2 class="section-title">Built for your clinical reality</h2>
+        <p class="section-body">
+          Flare Journal uses the same validated scoring instruments your
+          specialists rely on — so your self-tracking data means something
+          in the consulting room.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">&#128200;</span>
+          <h3 class="feature-title">Validated Clinical Scores</h3>
+          <p class="feature-desc">
+            17 validated scores across 14 conditions — CDAI, HBI, BASDAI, DAS28-CRP, RAPID3, and more. The same instruments your specialists use, computed from your daily logs.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#128202;</span>
+          <h3 class="feature-title">Longitudinal Charting</h3>
+          <p class="feature-desc">
+            Visualise your disease activity over weeks and months with
+            severity-zone charts. See patterns, track treatment response,
+            spot flares early.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#128274;</span>
+          <h3 class="feature-title">Privacy First</h3>
+          <p class="feature-desc">
+            Zero servers. Zero accounts. Zero tracking. All data stays on
+            your device and your personal iCloud. The developer cannot
+            access your data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works">
+    <div class="container">
+      <div class="how-header">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title">Simple by design</h2>
+        <p class="section-body">
+          Chronic illness is hard enough. Flare Journal keeps the logging
+          fast and the output meaningful.
+        </p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <p class="step-text">Log daily symptoms<br>in under 2 minutes</p>
+        </div>
+        <div class="step-arrow">&#8594;</div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <p class="step-text">Validated scores<br>computed automatically</p>
+        </div>
+        <div class="step-arrow">&#8594;</div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <p class="step-text">Share reports<br>with your doctor</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conditions -->
+  <section id="conditions">
+    <div class="container">
+      <div class="conditions-inner">
+        <div>
+          <p class="section-label">Conditions</p>
+          <h2 class="section-title">Conditions supported</h2>
+          <p class="section-body" style="margin-bottom: 40px;">
+            14 conditions. 17 validated clinical scores. Built for the complexity of autoimmune disease.
+          </p>
+
+          <div class="conditions-list">
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Crohn's Disease</p>
+                <p class="condition-scores">CDAI &middot; Harvey-Bradshaw Index (HBI)</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Ulcerative Colitis</p>
+                <p class="condition-scores">SCCAI</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Axial Spondyloarthritis</p>
+                <p class="condition-scores">BASDAI</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Ankylosing Spondylitis</p>
+                <p class="condition-scores">ASDAS-CRP</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Rheumatoid Arthritis</p>
+                <p class="condition-scores">RAPID3 &middot; DAS28-CRP &middot; SDAI</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Psoriatic Arthritis</p>
+                <p class="condition-scores">cDAPSA</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Systemic Lupus (SLE)</p>
+                <p class="condition-scores">Q-SLAQ</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Fibromyalgia</p>
+                <p class="condition-scores">FIQR</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Multiple Sclerosis</p>
+                <p class="condition-scores">EDSS</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Sj&ouml;gren's Syndrome</p>
+                <p class="condition-scores">ESSDAI</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Beh&ccedil;et's Disease</p>
+                <p class="condition-scores">BDCAF</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Giant Cell Arteritis</p>
+                <p class="condition-scores">PMR-AS</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Juvenile Idiopathic Arthritis</p>
+                <p class="condition-scores">JADAS</p>
+              </div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-dot"></div>
+              <div>
+                <p class="condition-name">Vasculitis</p>
+                <p class="condition-scores">BVAS</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="privacy-callout">
+            <span class="privacy-callout-icon">&#128737;&#65039;</span>
+            <p class="privacy-callout-title">Your data is yours. Always.</p>
+            <p class="privacy-callout-body">
+              Health data is among the most sensitive personal information
+              that exists. Flare Journal is built on a simple principle:
+              <strong>the developer has no access to your data.</strong>
+              <br><br>
+              There are no user accounts, no analytics SDKs, and no data
+              ever leaves your devices. Everything lives in your personal
+              iCloud — encrypted, private, and under your control.
+              <br><br>
+              <a href="privacy.html" style="color: var(--green); text-decoration: none; font-weight: 500;">Read the full privacy policy &#8599;</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <a href="#" class="footer-brand">
+          <img src="icon.png" alt="Flare Journal" class="footer-brand-icon">
+          <span class="footer-brand-name">Flare Journal</span>
+        </a>
+
+        <ul class="footer-links">
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="mailto:privacy@wan0.net">privacy@wan0.net</a></li>
+        </ul>
+
+        <div class="footer-meta">
+          <div>Made in Canberra, Australia</div>
+          <div>&copy; 2026 <a href="https://wan0.net">wan0.net</a></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
