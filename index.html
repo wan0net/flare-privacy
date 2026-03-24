@@ -23,10 +23,10 @@
 </head>
 <body>
     <h1>Flare Journal - Privacy Policy</h1>
-    <p class="updated">Last updated: March 19, 2026</p>
+    <p class="updated">Last updated: March 24, 2026</p>
 
     <h2>Summary</h2>
-    <p><strong>Your data stays on your device and your personal iCloud. The developer has no access to it. Period.</strong></p>
+    <p><strong>All your data stays on your device. The developer has no access to it. Period.</strong></p>
 
     <h2>Data Collection</h2>
     <p>Flare Journal does <strong>not</strong> collect, transmit, or store any of your data on external servers. Specifically:</p>
@@ -37,33 +37,56 @@
         <li>No server-side data storage</li>
         <li>No third-party SDKs that collect data</li>
         <li>No crash reporting services</li>
+        <li>No cloud sync or cloud storage</li>
     </ul>
 
     <h2>Data Storage</h2>
-    <p>All data you enter into Flare Journal (health scores, symptoms, lab values, appointments, and notes) is stored exclusively:</p>
-    <ul>
-        <li><strong>On your device</strong> using Apple's SwiftData framework</li>
-        <li><strong>In your personal iCloud</strong> if you have iCloud enabled for the app (syncing between your own devices only)</li>
-    </ul>
+    <p>All data you enter into Flare Journal is stored <strong>exclusively on your device</strong> using Apple's SwiftData framework with NSFileProtectionComplete encryption. Your data is never uploaded to any server, cloud service, or external system.</p>
     <p>The developer cannot access, read, or retrieve your data under any circumstances.</p>
 
-    <h2>Health Data</h2>
-    <p>Flare Journal processes health-related information (disease activity scores, symptom logs, lab values) entirely on your device. This data is never transmitted to any server. The app does not integrate with Apple HealthKit.</p>
+    <h2>Health Data Collected</h2>
+    <p>Flare Journal processes the following health-related information entirely on your device:</p>
+    <ul>
+        <li><strong>Disease activity scores</strong> — computed from your daily symptom entries using published clinical scoring indices (e.g. HBI, CDAI, BASDAI, RAPID3)</li>
+        <li><strong>Symptom logs</strong> — pain levels, stool counts, fatigue, joint counts, and other condition-specific inputs</li>
+        <li><strong>Lab values</strong> — CRP, ESR, hematocrit, and weight when entered manually</li>
+        <li><strong>Biological sex and weight</strong> — used for clinical score computation (optional)</li>
+        <li><strong>Medications</strong> — name, dosage, frequency, and indication</li>
+        <li><strong>Appointments</strong> — doctor name, location, and notes</li>
+    </ul>
+    <p>This data is never transmitted to any server. It is not used for advertising, marketing, or data mining.</p>
+
+    <h2>Apple Health (HealthKit)</h2>
+    <p>If you choose to connect Apple Health, Flare Journal may:</p>
+    <ul>
+        <li><strong>Read:</strong> weight, daily steps, sleep hours, and resting heart rate</li>
+        <li><strong>Write:</strong> weight and symptom data (abdominal cramps, diarrhea, fatigue, body ache, headache, nausea, fever, mood changes)</li>
+    </ul>
+    <p>HealthKit integration is entirely optional and requires your explicit permission. HealthKit data is never used for advertising, marketing, or shared with third parties. All HealthKit data processing occurs on your device.</p>
+
+    <h2>Medical Disclaimer</h2>
+    <p>Flare Journal is <strong>not a medical device</strong> and does not provide medical advice, diagnosis, or treatment. Clinical scores are computed using published scoring indices and should be interpreted by your healthcare provider. Do not make treatment decisions based solely on this app.</p>
 
     <h2>Notifications</h2>
     <p>Flare Journal can send local notifications to remind you to log your daily scores. These notifications are generated entirely on your device and do not involve any external push notification service.</p>
 
     <h2>Data Export</h2>
-    <p>You may choose to export your data (e.g., sharing a report with your doctor). This is entirely at your discretion, and the exported data is shared only with the recipient you choose. The developer is never involved in this process.</p>
+    <p>You may choose to export your data as JSON or CSV (e.g. to share with your doctor). This is entirely at your discretion, and the exported data is shared only with the recipient you choose. The developer is never involved in this process.</p>
 
     <h2>Data Deletion</h2>
-    <p>You can delete all your data at any time by deleting the app from your device. If iCloud sync is enabled, removing the app will also remove the data from iCloud.</p>
+    <p>You can delete all your data at any time through Settings within the app, or by deleting the app from your device. Deletion is immediate and permanent. There are no backups on external servers.</p>
+
+    <h2>Data Retention</h2>
+    <p>Your data is retained on your device for as long as the app is installed and you choose to keep it. The developer does not retain any copy of your data at any time.</p>
 
     <h2>Children's Privacy</h2>
-    <p>Flare Journal does not knowingly collect data from children under 13. The app may be used by minors under the supervision of a parent or guardian for tracking juvenile arthritis or other conditions.</p>
+    <p>Flare Journal does not knowingly collect data from children under 13. The app may be used by minors under the supervision of a parent or guardian for tracking conditions such as juvenile idiopathic arthritis.</p>
+
+    <h2>Third-Party Services</h2>
+    <p>Flare Journal does not integrate with any third-party services, analytics platforms, advertising networks, or cloud providers. The app contains no third-party code that collects or processes user data.</p>
 
     <h2>Changes to This Policy</h2>
-    <p>If this privacy policy changes, the updated version will be posted at this URL. Since the app collects no data, significant changes are unlikely.</p>
+    <p>If this privacy policy changes, the updated version will be posted at this URL. Since the app collects no data externally, significant changes are unlikely.</p>
 
     <div class="contact">
         <h2>Contact</h2>
